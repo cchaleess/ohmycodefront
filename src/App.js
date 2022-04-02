@@ -1,24 +1,66 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import React, { useState, useEffect } from "react";
+import "bootstrap/dist/css/bootstrap.min.css";
+import axios from "axios";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Table from "./components/Table";
+import Formulario from "./components/Formulario";
+import Login from "./pages/Login";
 
 function App() {
+  const [data, setData] = useState([]);
+  const [task, setTask] = useState({
+    userId: "",
+    id: "",
+    title: "",
+    completed: false,
+  });
+
+  const [isLogged, setIsLogged] = useState(false);
+
+  const handleChange = (e) => {
+    setTask({
+      ...task,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const getData = async () => {
+    await axios
+      .get("https://jsonplaceholder.typicode.com/todos")
+      .then((response) => {
+        setData(response.data);
+      })
+      .catch((err) => console.log(err));
+  };
+
+  useEffect(() => {
+    getData();
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Login setIsLogged={setIsLogged} />} />
+          
+        <Route
+          path="table"
+          element={
+            <Table
+              data={data}
+              setData={setData}
+              task={task}
+              setTask={setTask}
+              isLogged={isLogged}
+            />
+          }
+        />
+        <Route
+          path="form"
+          element={<Formulario task={task} handleChange={handleChange} />}
+        />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
