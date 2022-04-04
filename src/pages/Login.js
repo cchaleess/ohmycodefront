@@ -1,13 +1,12 @@
-import React, {useState} from "react";
-import { useNavigate } from 'react-router-dom';
-import {users} from "../utils/Users";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { users } from "../utils/Users";
 import axios from "axios";
 
-const Login = ({setIsLogged}) => {
-
+const Login = ({ setIsLogged }) => {
   const navigate = useNavigate();
 
-  const [user, setUser] = useState({    
+  const [user, setUser] = useState({
     username: "",
     password: "",
   });
@@ -23,26 +22,27 @@ const Login = ({setIsLogged}) => {
     e.preventDefault();
 
     //Comprobar username
-    const userExists = users.find(usuario => user.username === usuario.username);
+    const userExists = users.find(
+      (usuario) => user.username === usuario.username
+    );
 
-    if(!userExists){
-      alert('El Usuario no existe');
+    if (!userExists) {
+      alert("El Usuario no existe");
       return;
     }
 
     const url = "http://localhost:4000/api/users/login";
-    
+
     const response = await axios.post(url, {
-          username: user.username,
-          password: user.password,
-        });
-   
-      localStorage.setItem("token", response.data.token);
-      localStorage.setItem("user", JSON.stringify(response.data._id));
-      setIsLogged(true);
-      navigate("/table");
-    
-  }   
+      username: user.username,
+      password: user.password,
+    });
+
+    localStorage.setItem("token", response.data.token);
+    localStorage.setItem("user", JSON.stringify(response.data._id));
+    setIsLogged(true);
+    navigate("/table");
+  };
 
   return (
     <div className="container">
@@ -58,7 +58,7 @@ const Login = ({setIsLogged}) => {
                 id="username"
                 placeholder="User"
                 onChange={handleChange}
-                name="username"             
+                name="username"
               />
             </div>
             <div className="form-group p-4">

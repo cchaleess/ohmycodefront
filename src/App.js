@@ -8,7 +8,6 @@ import Formulario from "./components/Formulario";
 import Login from "./pages/Login";
 
 function App() {
-
   const [data, setData] = useState([]);
   const [task, setTask] = useState({
     userId: "",
@@ -35,7 +34,6 @@ function App() {
       .catch((err) => console.log(err));
   };
 
-
   useEffect(() => {
     getData();
   }, []);
@@ -44,7 +42,6 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Login setIsLogged={setIsLogged} />} />
-          
         <Route
           path="table"
           element={

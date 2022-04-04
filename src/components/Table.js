@@ -7,7 +7,6 @@ import { useNavigate } from "react-router-dom";
 const Table = ({ data, setData, setTask, isLogged }) => {
   const navigate = useNavigate();
 
-  const [tareasFiltradas, setTareasFiltradas] = useState([]);
   const [busqueda, setBusqueda] = useState("");
 
   const getDataUserId = async (userId) => {
@@ -19,12 +18,12 @@ const Table = ({ data, setData, setTask, isLogged }) => {
       console.log(error);
     }
   };
-
   useEffect(() => {
     if (isLogged) {
       const userId = JSON.parse(localStorage.getItem("user"));
       getDataUserId(userId);
     }
+    // eslint-disable-next-line
   }, [isLogged]);
 
   const editarTarea = (tarea) => {
@@ -51,19 +50,15 @@ const Table = ({ data, setData, setTask, isLogged }) => {
     }
   };
 
-  
-  
-
-
   return (
     <div className="App">
       <h1 className="mb-5">Lista de ToDo</h1>
       <div className="containerInput">
         <input
-          type="number"
+          type="text"
           className="form-control inputBuscar"
           value={busqueda}
-          placeholder="Búsqueda por Id de usuario"
+          placeholder="Introducir Id de usuario"
           onChange={(e) => setBusqueda(e.target.value)}
         />
         <button
@@ -77,7 +72,7 @@ const Table = ({ data, setData, setTask, isLogged }) => {
         <table className="table table-striped">
           <thead>
             <tr>
-              <th>UserId</th>
+              <th>Id Todo</th>
               <th>Title</th>
               <th>Completed</th>
               <th>Options</th>
@@ -89,7 +84,9 @@ const Table = ({ data, setData, setTask, isLogged }) => {
                 <tr key={tarea._id}>
                   <td>{tarea._id}</td>
                   <td>{tarea.title}</td>
-                  <td>{tarea.completed ? <p>Yes</p> : <p>No</p>}</td>
+                  <td>
+                    {tarea.completed ? <p>Completed</p> : <p>Not completed</p>}
+                  </td>
                   <td>
                     <button
                       className="btn btn-primary"
