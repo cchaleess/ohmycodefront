@@ -1,6 +1,10 @@
 import React,{useState} from 'react'
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const Formulario = ({task, handleChange}) => {
+
+    const navigate = useNavigate();
 
     const [error , setError] = useState({});    
     
@@ -20,8 +24,32 @@ const Formulario = ({task, handleChange}) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();      
-        validate();
-          console.log(task);
+       
+        //Actualizar con bearer token
+        if(validate()){
+           const updateTodo =  axios.put('http://localhost:4000/api/todos/' + task._id, {
+                userId: task.userId,
+                id: task.id,
+                title: task.title,
+                completed: task.completed,
+           }, {
+                headers: {
+                    Authorization: 'Bearer ' + localStorage.getItem('token')
+                }
+            });
+            updateTodo.then(res => {
+
+                if(res.status === 200){
+                    alert('Tarea actualizada');
+                    //Redireccionar a la tabla
+                    navigate('/table');
+                }
+            }
+            ).catch(err => {
+                console.log(err);
+            }
+            );
+        }
     }
 
 
@@ -30,13 +58,13 @@ const Formulario = ({task, handleChange}) => {
         <div className="container">
             <div className="row">
                 <div className="col-md-6 offset-md-3 p-4">
-                    <h3 className="text-center">Agregar Tarea</h3>
+                    <h3 className="text-center">Formulario Tarea</h3>
 
                 <form onSubmit={handleSubmit}>
                     <div className="form-group p-4">
                         <label htmlFor="userId">Id de usuario</label>
-                        <input type="number" className="form-control" id="userId" placeholder="Id de usuario"
-                            onChange={handleChange} value={task.userId} name="userId" />
+                        <input type="text" className="form-control" id="userId" placeholder="Id de usuario"
+                            onChange={handleChange} value={task._id} name="userId" disabled />
                         {error.userId && <p className="text-danger">{error.userId}</p>}
                     </div>
 

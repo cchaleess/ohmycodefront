@@ -1,13 +1,14 @@
 import React, {useState} from "react";
 import { useNavigate } from 'react-router-dom';
 import {users} from "../utils/Users";
+import axios from "axios";
 
 const Login = ({setIsLogged}) => {
 
   const navigate = useNavigate();
 
   const [user, setUser] = useState({    
-    userName: "",
+    username: "",
     password: "",
   });
 
@@ -18,39 +19,46 @@ const Login = ({setIsLogged}) => {
     });
   };
 
-  const iniciarSesion = (e) => {
+  const obtenerToken = async (e) => {
     e.preventDefault();
-    console.log(user);
-     const userName = user.userName;
-    const password = user.password;
-    const userLogin = users.find((user) => user.userName === userName && user.password === password);
-   
-    
-    if (userLogin !== undefined) {       
-        localStorage.setItem("user", JSON.stringify(userLogin));
-        setIsLogged(true);
-        navigate("/table");
-    } else {
-        alert("Usuario o contraseña incorrectos");
-        }
+
+    //Comprobar username
+    const userExists = users.find(usuario => user.username === usuario.username);
+
+    if(!userExists){
+      alert('El Usuario no existe');
+      return;
     }
 
+    const url = "http://localhost:4000/api/users/login";
+    
+    const response = await axios.post(url, {
+          username: user.username,
+          password: user.password,
+        });
+   
+      localStorage.setItem("token", response.data.token);
+      localStorage.setItem("user", JSON.stringify(response.data._id));
+      setIsLogged(true);
+      navigate("/table");
+    
+  }   
 
   return (
     <div className="container">
       <div className="row">
         <div className="col-md-6 offset-md-3 p-4">
           <h3 className="text-center">Login</h3>
-          <form onSubmit={iniciarSesion}>
+          <form onSubmit={obtenerToken}>
             <div className="form-group p-4">
               <label htmlFor="userName">User</label>
               <input
                 type="text"
                 className="form-control"
-                id="userName"
+                id="username"
                 placeholder="User"
                 onChange={handleChange}
-                name="userName"             
+                name="username"             
               />
             </div>
             <div className="form-group p-4">

@@ -8,6 +8,7 @@ import Formulario from "./components/Formulario";
 import Login from "./pages/Login";
 
 function App() {
+
   const [data, setData] = useState([]);
   const [task, setTask] = useState({
     userId: "",
@@ -15,7 +16,6 @@ function App() {
     title: "",
     completed: false,
   });
-
   const [isLogged, setIsLogged] = useState(false);
 
   const handleChange = (e) => {
@@ -27,12 +27,14 @@ function App() {
 
   const getData = async () => {
     await axios
-      .get("https://jsonplaceholder.typicode.com/todos")
+      .get("http://localhost:4000/api/todos")
       .then((response) => {
+        console.log(response.data);
         setData(response.data);
       })
       .catch((err) => console.log(err));
   };
+
 
   useEffect(() => {
     getData();
