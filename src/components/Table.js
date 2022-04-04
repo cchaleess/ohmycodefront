@@ -5,8 +5,8 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 const Table = ({ data, setData, setTask, isLogged }) => {
+  
   const navigate = useNavigate();
-
   const [busqueda, setBusqueda] = useState("");
 
   const getDataUserId = async (userId) => {

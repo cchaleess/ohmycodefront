@@ -41,7 +41,7 @@ const Formulario = ({ task, handleChange }) => {
       updateTodo
         .then((res) => {
           if (res.status === 200) {
-            alert("Tarea actualizada");
+            alert("Updated successfully");
             //Redireccionar a la tabla
             navigate("/table");
           }
@@ -56,11 +56,11 @@ const Formulario = ({ task, handleChange }) => {
     <div className="container">
       <div className="row">
         <div className="col-md-6 offset-md-3 p-4">
-          <h3 className="text-center">Formulario Tarea</h3>
+          <h3 className="text-center">Task Form</h3>
 
           <form onSubmit={handleSubmit}>
             <div className="form-group p-4">
-              <label htmlFor="userId">Id de usuario</label>
+              <label htmlFor="userId">User id</label>
               <input
                 type="text"
                 className="form-control"
@@ -89,7 +89,7 @@ const Formulario = ({ task, handleChange }) => {
             </div>
 
             <div className="form-group p-4">
-              <label htmlFor="completed">Completado</label>
+              <label htmlFor="completed">Completed</label>
               <select
                 className="form-control"
                 id="completed"
