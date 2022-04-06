@@ -1,21 +1,38 @@
 import "./App.css";
 import React, { useState, useEffect } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-import axios from "axios";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Table from "./components/Table";
+import Table from "./pages/Table";
 import Formulario from "./components/Formulario";
 import Login from "./pages/Login";
+import RegisterUser from "./pages/RegisterUser";
+import TaskService from "./services/TaskService";
 
 function App() {
+
   const [data, setData] = useState([]);
+  const [isLogged, setIsLogged] = useState(false);
+
   const [task, setTask] = useState({
-    userId: "",
+    user: "",
     id: "",
     title: "",
     completed: false,
   });
-  const [isLogged, setIsLogged] = useState(false);
+
+  useEffect(() => {
+    if (localStorage.getItem("token")) {
+      setIsLogged(true);
+    }
+  }, []);
+
+ useEffect(() => {
+   new TaskService().getAllTasks().then((res) => {
+     console.log(res);
+      setData(res);
+    }
+    );    
+  }, []);
 
   const handleChange = (e) => {
     setTask({
@@ -24,23 +41,12 @@ function App() {
     });
   };
 
-  const getData = async () => {
-    await axios
-      .get("http://localhost:4000/api/todos")
-      .then((response) => {
-        console.log(response.data);
-        setData(response.data);
-      })
-      .catch((err) => console.log(err));
-  };
-
-  useEffect(() => {
-    getData();
-  }, []);
+ 
 
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="/register" element={<RegisterUser handleChange={handleChange} />} />
         <Route path="/" element={<Login setIsLogged={setIsLogged} />} />
         <Route
           path="table"
@@ -56,7 +62,7 @@ function App() {
         />
         <Route
           path="form"
-          element={<Formulario task={task} handleChange={handleChange} />}
+          element={<Formulario task={task} handleChange={handleChange} isLogged={isLogged}/>}
         />
       </Routes>
     </BrowserRouter>

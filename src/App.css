@@ -48,8 +48,8 @@ table{
 }
 
 .containerInput{
-  align-items: end;
-  right: 0;
+/*   align-items: end;
+ */  right: 0;
   display: flex;
   justify-content: flex-end;
   padding-bottom: 25px;
@@ -58,7 +58,7 @@ table{
 @media (max-width: 988px){
   
   .inputBuscar{
-    width: 100% !important;
+    width: 50% !important;
   }
 
   .App{

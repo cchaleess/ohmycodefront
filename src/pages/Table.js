@@ -1,29 +1,27 @@
 import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSearch } from "@fortawesome/free-solid-svg-icons";
-import axios from "axios";
+import { faSearch, faPlus } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
+import "bootstrap/dist/css/bootstrap.min.css";
+import UserService from "../services/UserService";
+import TaskService from "../services/TaskService";
 
 const Table = ({ data, setData, setTask, isLogged }) => {
-  
+
+  let user = localStorage.getItem("user");
+
   const navigate = useNavigate();
   const [busqueda, setBusqueda] = useState("");
-
-  const getDataUserId = async (userId) => {
-    try {
-      const url = `http://localhost:4000/api/todos/${userId}`;
-      const response = await axios.get(url);
-      setData(response.data);
-    } catch (error) {
-      console.log(error);
-    }
+  const dataUser = async (id) => {
+    new UserService().dataUser(id).then((res) => {
+      setData(res);
+    });
   };
+
   useEffect(() => {
     if (isLogged) {
-      const userId = JSON.parse(localStorage.getItem("user"));
-      getDataUserId(userId);
+      dataUser(localStorage.getItem("id"));
     }
-    // eslint-disable-next-line
   }, [isLogged]);
 
   const editarTarea = (tarea) => {
@@ -31,17 +29,35 @@ const Table = ({ data, setData, setTask, isLogged }) => {
     navigate("/form");
   };
 
+ const agregarTarea = () => {
+   
+    setTask({
+      user: localStorage.getItem("id"),
+      id: "",
+      title: "",
+      completed: false,
+    });
+    navigate("/form");
+  };
+
+
+
+  const logout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    localStorage.removeItem("id");
+    isLogged(false);
+    navigate("/");
+  }
+
+
   const eliminarTarea = (id) => {
     if (window.confirm("¿Are you sure? This cannot be undone.")) {
       // Delete the item from the API
-      const eliminarTarea = axios.delete(
-        `http://localhost:4000/api/todos/${id}`
-      );
-      eliminarTarea.then((res) => {
-        console.log(res);
+      new TaskService().deleteTask(id).then((res) => {
         if (res.status === 200) {
           alert("Tarea eliminada");
-          // Delete the item from the local state
+          // lo borro del state
           const tareas = data.filter((tarea) => tarea._id !== id);
           setData(tareas);
           navigate("/table");
@@ -51,9 +67,28 @@ const Table = ({ data, setData, setTask, isLogged }) => {
   };
 
   return (
-    <div className="App">
-      <h1 className="mb-5">Lista de ToDo</h1>
+
+      
+    <div className="App"> 
+     
+     {isLogged ? (  
+      <div className="container">
+           <div className="col-sm-6 pr-1 pl-1">
+            <p >Welcome: <strong>{user}</strong></p>
+            </div>
+            <div className="col-sm-6">
+            <button className="btn btn-danger" onClick={() => logout}>Logout</button>
+          </div>
+           
+      <h1 className="mb-5 p-4">Todo List OhMyCode</h1>
       <div className="containerInput">
+      
+            <button className="btn btn-primary btn-lg m-auto" onClick={() => agregarTarea() }>
+            <FontAwesomeIcon icon={faPlus} />Add Task
+            </button>
+
+         
+         
         <input
           type="text"
           className="form-control inputBuscar"
@@ -61,10 +96,7 @@ const Table = ({ data, setData, setTask, isLogged }) => {
           placeholder="Introducir Id de usuario"
           onChange={(e) => setBusqueda(e.target.value)}
         />
-        <button
-          className="btn btn-success"
-          onClick={() => getDataUserId(busqueda)}
-        >
+        <button className="btn btn-success" onClick={() => dataUser(busqueda)}>
           <FontAwesomeIcon icon={faSearch} />
         </button>
       </div>
@@ -72,6 +104,7 @@ const Table = ({ data, setData, setTask, isLogged }) => {
         <table className="table table-striped">
           <thead>
             <tr>
+              <th>Id User</th>
               <th>Id Todo</th>
               <th>Title</th>
               <th>Completed</th>
@@ -82,6 +115,7 @@ const Table = ({ data, setData, setTask, isLogged }) => {
             {data &&
               data.map((tarea) => (
                 <tr key={tarea._id}>
+                  <td>{tarea.user._id}</td>
                   <td>{tarea._id}</td>
                   <td>{tarea.title}</td>
                   <td>
@@ -107,7 +141,14 @@ const Table = ({ data, setData, setTask, isLogged }) => {
         </table>
       </div>
     </div>
-  );
-};
+  ) : (
+        <div className="alert alert-danger" role="alert">
+          <a className="link-dark" href="/"><strong>You must be logged in to see this page!</strong></a>
+        </div>
+      )}
+  
+      </div>  
+      )  
+}
 
 export default Table;

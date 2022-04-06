@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { users } from "../utils/Users";
-import axios from "axios";
+import LoginService from "../services/LoginService";
 
 const Login = ({ setIsLogged }) => {
   const navigate = useNavigate();
@@ -18,30 +17,19 @@ const Login = ({ setIsLogged }) => {
     });
   };
 
-  const obtenerToken = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
-    //Comprobar username
-    const userExists = users.find(
-      (usuario) => user.username === usuario.username
-    );
-
-    if (!userExists) {
-      alert("El Usuario no existe");
-      return;
-    }
-
-    const url = "http://localhost:4000/api/users/login";
-
-    const response = await axios.post(url, {
-      username: user.username,
-      password: user.password,
+    new LoginService().login(user).then((respuesta) => {
+      if (respuesta.error) {
+        alert(respuesta.error); //respuesta del servidor
+      } else {
+        localStorage.setItem("token", respuesta.token);
+        localStorage.setItem("user", respuesta.username);
+        localStorage.setItem("id", respuesta._id);
+        setIsLogged(true);
+        navigate("/table");
+      }
     });
-
-    localStorage.setItem("token", response.data.token);
-    localStorage.setItem("user", JSON.stringify(response.data._id));
-    setIsLogged(true);
-    navigate("/table");
   };
 
   return (
@@ -49,7 +37,7 @@ const Login = ({ setIsLogged }) => {
       <div className="row">
         <div className="col-md-6 offset-md-3 p-4">
           <h3 className="text-center">Login</h3>
-          <form onSubmit={obtenerToken}>
+          <form onSubmit={handleSubmit}>
             <div className="form-group p-4">
               <label htmlFor="userName">User</label>
               <input
@@ -72,9 +60,18 @@ const Login = ({ setIsLogged }) => {
                 onChange={handleChange}
               />
             </div>
-            <button type="submit" className="btn btn-primary btn-block">
-              Submit
-            </button>
+            <div
+            className="form-group p-4 justify-content-between"
+            >
+              <button type="submit" 
+              className="btn btn-primary btn-block col-sm-6 m-2">
+                Login
+              </button>
+              <a href="/register" 
+              className="link-dark col-sm-6 m-2">
+                Click here to register
+              </a>
+            </div>
           </form>
         </div>
       </div>
