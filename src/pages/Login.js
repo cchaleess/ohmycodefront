@@ -60,15 +60,14 @@ const Login = ({ setIsLogged }) => {
                 onChange={handleChange}
               />
             </div>
-            <div
-            className="form-group p-4 justify-content-between"
-            >
-              <button type="submit" 
-              className="btn btn-primary btn-block col-sm-6 m-2">
+            <div className="form-group p-4 justify-content-between">
+              <button
+                type="submit"
+                className="btn btn-primary btn-block col-sm-6 m-2"
+              >
                 Login
               </button>
-              <a href="/register" 
-              className="link-dark col-sm-6 m-2">
+              <a href="/register" className="link-dark col-sm-6 m-2">
                 Click here to register
               </a>
             </div>

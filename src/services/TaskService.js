@@ -1,5 +1,4 @@
 class TaskService {
-
   getAllTasks = async () => {
     try {
       const url = "http://localhost:4000/api/todos";
@@ -11,27 +10,25 @@ class TaskService {
     }
   };
 
-    createTask = async (task) => {
-      
-        delete task.id;
-        task.user = localStorage.getItem("id");
+  createTask = async (task) => {
+    delete task.id;
+    task.user = localStorage.getItem("id");
 
     try {
-        const url = "http://localhost:4000/api/todos";
-        const respuesta = await fetch(url, {
-            method: "POST",
-            body: JSON.stringify(task),
-            headers: {
-                "Content-Type": "application/json",
-            },
-        });
-        const data = await respuesta;
-        return data;
+      const url = "http://localhost:4000/api/todos";
+      const respuesta = await fetch(url, {
+        method: "POST",
+        body: JSON.stringify(task),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const data = await respuesta;
+      return data;
     } catch (error) {
-        console.log(error);
+      console.log(error);
     }
-};
-
+  };
 
   deleteTask = async (id) => {
     try {
@@ -45,17 +42,17 @@ class TaskService {
       console.log(error);
     }
   };
-  //con token
+
   updateTask = async (task) => {
     try {
-        console.log(task._id);
+      console.log(task._id);
       const url = "http://localhost:4000/api/todos/" + task._id;
       const respuesta = await fetch(url, {
         method: "PUT",
         body: JSON.stringify(task),
         headers: {
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + localStorage.getItem("token"),
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("token"),
         },
       });
       const resultado = await respuesta;

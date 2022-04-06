@@ -1,7 +1,5 @@
-class UserService {  
-    
+class UserService {
   dataUser = async (id) => {
-
     try {
       const url = `http://localhost:4000/api/todos/${id}`;
       const data = await fetch(url, {
@@ -16,13 +14,7 @@ class UserService {
     } catch (error) {
       console.log(error);
     }
-  
-
-
-  }
-  async getUsers() {
-    return this.userRepository.getUsers();
-  }
+  };
 }
 
 export default UserService;
