@@ -52,7 +52,6 @@ debugger;
         <div className="col-md-6 offset-md-3 p-4">
           <h3 className="text-center">Task Form</h3>
           <form onSubmit={handleSubmit}>
-
             <div className="form-group p-4">
               <label htmlFor="user">User id</label>
               <input
@@ -61,7 +60,7 @@ debugger;
                 id="user"
                 placeholder="user id"
                 onChange={handleChange}
-                value={task.user}
+                value={task.user._id}
                 name="user"
                 disabled
               />
@@ -83,7 +82,7 @@ debugger;
 
 
             <div className="form-group p-4">
-              <label htmlFor="title">Título</label>
+              <label htmlFor="title">Title</label>
               <input
                 type="text"
                 className="form-control"
@@ -109,9 +108,22 @@ debugger;
                 <option value={false}>Not Completed</option>
               </select>
             </div>
-            <button type="submit" className="btn btn-primary btn-block">
+            <div 
+            className="row d-flex">
+            <div className="col-md-6">
+                <button type="submit" className="btn btn-primary">
               Submit
             </button>
+            </div>
+            <div className="col-md-6">
+            <a href="/table" className="m-5">
+              Back to table
+            </a>
+          </div>
+            
+            </div>
+       
+
           </form>
         </div>
       </div>

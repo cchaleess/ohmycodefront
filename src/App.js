@@ -28,7 +28,6 @@ function App() {
 
  useEffect(() => {
    new TaskService().getAllTasks().then((res) => {
-     console.log(res);
       setData(res);
     }
     );    

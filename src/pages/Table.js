@@ -9,15 +9,18 @@ import TaskService from "../services/TaskService";
 const Table = ({ data, setData, setTask, isLogged }) => {
 
   let user = localStorage.getItem("user");
+  let id = localStorage.getItem("id");
 
+ const [q, setQ] = useState("");
   const navigate = useNavigate();
-  const [busqueda, setBusqueda] = useState("");
+
+  
   const dataUser = async (id) => {
     new UserService().dataUser(id).then((res) => {
       setData(res);
     });
   };
-
+  
   useEffect(() => {
     if (isLogged) {
       dataUser(localStorage.getItem("id"));
@@ -39,7 +42,6 @@ const Table = ({ data, setData, setTask, isLogged }) => {
     });
     navigate("/form");
   };
-
 
 
   const logout = () => {
@@ -72,13 +74,12 @@ const Table = ({ data, setData, setTask, isLogged }) => {
     <div className="App"> 
      
      {isLogged ? (  
-      <div className="container">
-           <div className="col-sm-6 pr-1 pl-1">
-            <p >Welcome: <strong>{user}</strong></p>
+        <div className="row">
+        <div className="col-md-2 col-md-4 col-xs-6">
+            Welcome:<strong>{user}</strong>
+                  <button className="btn btn-danger" onClick={() => logout}>Logout</button>
             </div>
-            <div className="col-sm-6">
-            <button className="btn btn-danger" onClick={() => logout}>Logout</button>
-          </div>
+         
            
       <h1 className="mb-5 p-4">Todo List OhMyCode</h1>
       <div className="containerInput">
@@ -92,11 +93,11 @@ const Table = ({ data, setData, setTask, isLogged }) => {
         <input
           type="text"
           className="form-control inputBuscar"
-          value={busqueda}
+          value={q}
           placeholder="Introducir Id de usuario"
-          onChange={(e) => setBusqueda(e.target.value)}
+          onChange={(e) => setQ(e.target.value)}
         />
-        <button className="btn btn-success" onClick={() => dataUser(busqueda)}>
+        <button className="btn btn-success" onClick={() => dataUser(q)}>
           <FontAwesomeIcon icon={faSearch} />
         </button>
       </div>
@@ -112,8 +113,7 @@ const Table = ({ data, setData, setTask, isLogged }) => {
             </tr>
           </thead>
           <tbody>
-            {data &&
-              data.map((tarea) => (
+            {data.map((tarea) => (
                 <tr key={tarea._id}>
                   <td>{tarea.user._id}</td>
                   <td>{tarea._id}</td>
